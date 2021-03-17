@@ -44,6 +44,46 @@ import sys
 # You could write a helper utility function that reads a file
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
+def print_words(filename):
+    print_words_list = build_list_from_file(filename)
+    #count_words_list = count_words(print_words_list)
+    for item in print_words_list:
+        print(str(item))
+    sys.exit(0)
+        
+def print_top(filename):
+    print_top_list = build_list_from_file(filename)
+    top_20_list = sorted(print_top_list, key=MyKey, reverse=True)
+    for i in range(20):
+        print(top_20_list[i])
+    sys.exit(0)
+    
+    
+def build_list_from_file(filename):
+    file_dict = open(filename)
+    unsorted_list = []
+    for line in file_dict:
+        unsorted_list += line.lower().split()
+    file_dict.close
+    return count_words(sorted(unsorted_list))
+
+def count_words(sorted_list):
+    counted_list = []
+    count = 1
+    for i in range(len(sorted_list)):
+        if i == (len(sorted_list) - 1):
+            counted_list.append([sorted_list[i],count])
+            count = 1
+        elif sorted_list[i] == sorted_list[i+1]:
+            count += 1
+        else:
+            counted_list.append([sorted_list[i],count])
+            count = 1
+    return counted_list
+    
+def MyKey(s):
+    return s[-1]
+        
 
 ###
 
@@ -51,7 +91,7 @@ import sys
 # calls the print_words() and print_top() functions which you must define.
 def main():
   if len(sys.argv) != 3:
-    print 'usage: ./wordcount.py {--count | --topcount} file'
+    print('usage: ./wordcount.py {--count | --topcount} file')
     sys.exit(1)
 
   option = sys.argv[1]
@@ -61,7 +101,7 @@ def main():
   elif option == '--topcount':
     print_top(filename)
   else:
-    print 'unknown option: ' + option
+    print('unknown option: ' + option)
     sys.exit(1)
 
 if __name__ == '__main__':

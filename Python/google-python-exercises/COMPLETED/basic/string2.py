@@ -1,4 +1,4 @@
-#!/usr/bin/python2.4 -tt
+#!/usr/bin/python3.9 -tt
 # Copyright 2010 Google Inc.
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +17,13 @@
 # Return the resulting string.
 def verbing(s):
   # +++your code here+++
-  return
+  return_s = s
+  if len(return_s) >= 3:
+    if return_s.endswith('ing'):
+        return_s = return_s + 'ly'
+    else:
+        return_s = return_s + 'ing'
+  return return_s
 
 
 # E. not_bad
@@ -30,7 +36,12 @@ def verbing(s):
 # This dinner is good!
 def not_bad(s):
   # +++your code here+++
-  return
+  not_index = s.find('not')
+  bad_index = s.find('bad')
+  return_s = s
+  if not_index > -1 and bad_index > -1 and bad_index > not_index:
+    return_s = return_s.replace(return_s[not_index:(bad_index + 3)],'good')
+  return return_s
 
 
 # F. front_back
@@ -42,8 +53,34 @@ def not_bad(s):
 #  a-front + b-front + a-back + b-back
 def front_back(a, b):
   # +++your code here+++
-  return
-
+  a_front = ''
+  a_back = ''
+  b_front = ''
+  b_back = ''
+  return_s = ''
+  if is_even(len(a)) == 1:
+    a_front = a[0:int(len(a)/2)]
+    a_back = a[int(len(a)/2):len(a)]
+  else:
+    a_front = a[0:int((len(a)+1)/2)]
+    a_back = a[int((len(a)+1)/2):len(a)]
+    
+  if is_even(len(b)) == 1:
+    b_front = b[0:int(len(b)/2)]
+    b_back = b[int(len(b)/2):len(b)]
+  else:
+    b_front = b[0:int((len(b)+1)/2)]
+    b_back = b[int((len(b)+1)/2):len(b)]
+    
+  return_s = a_front + b_front + a_back + b_back
+  
+  return return_s
+  
+def is_even(i):
+    return_val = 0
+    if (i%2) == 0:
+        return_val = 1
+    return return_val
 
 # Simple provided test() function used in main() to print
 # what each function returns vs. what it's supposed to return.
@@ -52,26 +89,26 @@ def test(got, expected):
     prefix = ' OK '
   else:
     prefix = '  X '
-  print '%s got: %s expected: %s' % (prefix, repr(got), repr(expected))
+  print('%s got: %s expected: %s' % (prefix, repr(got), repr(expected)))
 
 
 # main() calls the above functions with interesting inputs,
 # using the above test() to check if the result is correct or not.
 def main():
-  print 'verbing'
+  print('verbing')
   test(verbing('hail'), 'hailing')
   test(verbing('swiming'), 'swimingly')
   test(verbing('do'), 'do')
 
   print
-  print 'not_bad'
+  print('not_bad')
   test(not_bad('This movie is not so bad'), 'This movie is good')
   test(not_bad('This dinner is not that bad!'), 'This dinner is good!')
   test(not_bad('This tea is not hot'), 'This tea is not hot')
   test(not_bad("It's bad yet not"), "It's bad yet not")
 
   print
-  print 'front_back'
+  print('front_back')
   test(front_back('abcd', 'xy'), 'abxcdy')
   test(front_back('abcde', 'xyz'), 'abcxydez')
   test(front_back('Kitten', 'Donut'), 'KitDontenut')
