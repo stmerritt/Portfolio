@@ -1,3 +1,5 @@
+//This code is written by Stephen Merritt for his portfolio
+
 #include <iostream>
 
 using namespace std;
