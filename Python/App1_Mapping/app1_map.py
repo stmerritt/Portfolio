@@ -18,8 +18,12 @@ def color_producer(elev, elev_avg):
 map = folium.Map(location=[38.58, -99.09], zoom_start=5, tiles="Stamen Terrain")
 
 # Create feature groups for volcanoes and population layers
-volcano_fg = folium.FeatureGroup(name="Volcanoes")
 pop_fg = folium.FeatureGroup(name="Population")
+volcano_fg = folium.FeatureGroup(name="Volcanoes")
+
+# Add data for population of countries, loaded from json file. Set fillColor by population
+pop_fg.add_child(folium.GeoJson(data=open('world.json', 'r', encoding='utf-8-sig').read(), 
+style_function=lambda x: {'fillColor':'green' if x['properties']['POP2005'] < 10000000 else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000 else 'blue'}))
 
 # Load volcano data from text file
 volcano_data = pandas.read_csv("Volcanoes.txt")
@@ -43,13 +47,9 @@ for lat, lon, elev, name in zip(volcano_lat, volcano_lon, volcano_elev, volcano_
     iframe = folium.IFrame(html=html % (name + " volcano", name, elev), width=200, height=100)
     volcano_fg.add_child(folium.CircleMarker(location=[lat, lon], radius=6, fill=True, popup=folium.Popup(iframe), fill_color=color_producer(elev, volcano_elev_avg), color='grey', fill_opacity=0.7))
 
-# Add data for population of countries, loaded from json file. Set fillColor by population
-pop_fg.add_child(folium.GeoJson(data=open('world.json', 'r', encoding='utf-8-sig').read(), 
-style_function=lambda x: {'fillColor':'green' if x['properties']['POP2005'] < 10000000 else 'orange' if 10000000 <= x['properties']['POP2005'] < 20000000 else 'blue'}))
-
 # Add layers and layer control to map
-map.add_child(volcano_fg)
 map.add_child(pop_fg)
+map.add_child(volcano_fg)
 map.add_child(folium.LayerControl())
 
 # Save map file
